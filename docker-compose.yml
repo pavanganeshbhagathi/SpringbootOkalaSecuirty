@@ -2,17 +2,23 @@ version: '3.9'
 
 services:
 
-  mongodb:
-    image: mongo:5.0.12
-    container_name: mongodb
+  mysqldb:
+    image: mysql:8.0.20
+    container_name: mysqldb
+    environment: 
+       MYSQL_ROOT_PASSWORD: pavan
+       MYSQL_USER: pavan 
+       MYSQL_PASSWORD: keycloak
+       MYSQL_DATABASE: keycloak
     ports:
-      - "27017:27017"
+      - "3306:3306"
     networks:
       - secure-network
     volumes:
-      - /app/hdp/mongo/data:/data/db 
+      - /var/lib/mysql
     healthcheck:
-      test: echo 'db.stats().ok' | mongo localhost:27017/bookdb --quiet
+      test: ["CMD", "mysqladmin", "-u$root", "-p$pavan",  "ping", "-h", "localhost"]
+
 
   keycloak:
     image: quay.io/keycloak/keycloak:19.0.1
@@ -22,7 +28,7 @@ services:
     networks:
       - secure-network
     depends_on:
-      - mongodb
+      - mysqldb
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
