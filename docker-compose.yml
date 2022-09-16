@@ -12,6 +12,8 @@ services:
        MYSQL_DATABASE: keycloak
     ports:
       - "3306:3306"
+    security_opt:
+      - seccomp:unconfined
     networks:
       - secure-network
     volumes:
@@ -32,7 +34,10 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_DB: dev-mem
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://mysqldb:3306/keycloak
+      KC_DB_USERNAME: pavan
+      KC_DB_PASSWORD: keycloak
     command: start-dev
     healthcheck:
       test: "curl -f http://localhost:8080/admin || exit 1"
