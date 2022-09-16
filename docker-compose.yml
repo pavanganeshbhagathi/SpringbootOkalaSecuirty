@@ -1,4 +1,5 @@
-version: '3.8'
+version: '3.9'
+
 services:
 
   mongodb:
@@ -6,6 +7,8 @@ services:
     container_name: mongodb
     ports:
       - "27017:27017"
+    networks:
+      - secure-network
     volumes:
       - /app/hdp/mongo/data:/data/db 
     healthcheck:
@@ -16,6 +19,10 @@ services:
     container_name: keycloak
     ports:
       - "8080:8080"
+    networks:
+      - secure-network
+    depends_on:
+      - mongodb
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -23,3 +30,8 @@ services:
     command: start-dev
     healthcheck:
       test: "curl -f http://localhost:8080/admin || exit 1"
+   
+
+
+networks:
+    secure-network:
