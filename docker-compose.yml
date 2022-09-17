@@ -38,6 +38,7 @@ services:
       KC_DB_URL: jdbc:mysql://mysqldb:3306/keycloak
       KC_DB_USERNAME: pavan
       KC_DB_PASSWORD: keycloak
+      JDBC_PARAMS: "useSSL=false"
     command: start-dev
     healthcheck:
       test: "curl -f http://localhost:8080/admin || exit 1"
